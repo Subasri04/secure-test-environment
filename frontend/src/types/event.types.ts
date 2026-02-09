@@ -3,5 +3,5 @@ export interface AuditEvent {
   timestamp: string;
   attemptId: string;
   questionId?: string | null;
-  metadata: Record<string, any>;
+  metadata: Record<string, string | number | boolean>;
 }

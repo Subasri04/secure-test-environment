@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { logEvent } from "../services/eventLogger";
 import BlockedScreen from "../components/BlockedScreen";
 import AssessmentShell from "../components/AssessmentShell";
@@ -20,28 +20,29 @@ function detectBrowser() {
 }
 
 const BootstrapGuard = () => {
-  const [allowed, setAllowed] = useState<boolean | null>(null);
-
-  useEffect(() => {
+  const [allowed] = useState<boolean>(() => {
     const browser = detectBrowser();
 
+    // Log detected browser
     logEvent("browser_detected", {
       browser: browser.name,
       version: browser.version,
     });
 
+    // Block unsupported browsers
     if (!browser.isChrome) {
       logEvent("access_blocked", {
         reason: "unsupported_browser",
       });
-      setAllowed(false);
-    } else {
-      setAllowed(true);
+      return false;
     }
-  }, []);
 
-  if (allowed === null) return null;
-  if (!allowed) return <BlockedScreen />;
+    return true;
+  });
+
+  if (!allowed) {
+    return <BlockedScreen />;
+  }
 
   return <AssessmentShell />;
 };

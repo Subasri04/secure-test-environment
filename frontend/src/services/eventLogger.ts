@@ -1,16 +1,16 @@
 
 import type { AuditEvent } from "../types/event.types";
-import { getOrCreateAttemptId } from "./attemptService";
+import { createAttemptId } from "./attemptService";
 
 export function logEvent(
   eventType: string,
-  metadata: Record<string, any>,
+  metadata: Record<string, string | number | boolean> = {},
   questionId: string | null = null
 ) {
   const event: AuditEvent = {
     eventType,
     timestamp: new Date().toISOString(),
-    attemptId: getOrCreateAttemptId(),
+    attemptId: createAttemptId(),
     questionId,
     metadata,
   };
