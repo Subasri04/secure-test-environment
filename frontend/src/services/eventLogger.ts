@@ -1,8 +1,8 @@
-
 import type { AuditEvent } from "../types/event.types";
 import { createAttemptId } from "./attemptService";
+import { addEvent } from "./db";
 
-export function logEvent(
+export async function logEvent(
   eventType: string,
   metadata: Record<string, string | number | boolean> = {},
   questionId: string | null = null
@@ -15,5 +15,7 @@ export function logEvent(
     metadata,
   };
 
-  console.log("[AUDIT EVENT]", event);
+  await addEvent(event);
+
+  console.log("[AUDIT EVENT - STORED]", event);
 }
