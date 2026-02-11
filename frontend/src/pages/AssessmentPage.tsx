@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, Typography, Button, Alert, Space, Statistic, message } from "antd";
 import {
   logAssessmentEvent,
@@ -22,6 +22,8 @@ const SUBMIT_TIME_KEY = "assessment_submit_time";
 
 const AssessmentPage = () => {
   const { employee_id } = useParams<{ employee_id: string }>();
+  const navigate = useNavigate();
+
   const initialSubmitTime = sessionStorage.getItem(SUBMIT_TIME_KEY);
 
   const [submitted, setSubmitted] = useState<boolean>(
@@ -121,6 +123,12 @@ const AssessmentPage = () => {
     finalizeSubmission("Assessment submitted.");
   };
 
+  const goHome = () => {
+    stopTimer();
+    sessionStorage.removeItem(SUBMIT_TIME_KEY);
+    navigate("/");
+  };
+
   return (
     <div
       style={{
@@ -158,15 +166,21 @@ const AssessmentPage = () => {
             message="Fullscreen is mandatory. Clipboard and tab activity are logged."
           />
 
-          <Button
-            type="primary"
-            danger
-            block
-            disabled={submitted}
-            onClick={submit}
-          >
-            {submitted ? "Assessment Submitted" : "Submit Assessment"}
-          </Button>
+          <Space vertical style={{ width: "100%" }}>
+            <Button
+              type="primary"
+              danger
+              block
+              disabled={submitted}
+              onClick={submit}
+            >
+              {submitted ? "Assessment Submitted" : "Submit Assessment"}
+            </Button>
+
+            {submitted ? <Button block onClick={goHome}>
+              Back to Home
+            </Button> : <></>}
+          </Space>
         </Space>
       </Card>
     </div>
