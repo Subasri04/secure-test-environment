@@ -5,7 +5,7 @@ import { BrowserLog } from "../types/browser-logs.types";
 
 export function createBrowserLog(req: Request, res: Response) {
   const { employeeId, eventType, browserName, browserVersion } = req.body;
-  console.log('--body---', req.body)
+
   if (!employeeId || !eventType || !browserName || !browserVersion) {
     return res.status(400).json({ message: "Invalid browser log payload" });
   }
